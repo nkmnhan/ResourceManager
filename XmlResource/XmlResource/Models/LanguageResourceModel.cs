@@ -2,11 +2,11 @@
 
 namespace XmlResource.Models
 {
-    public class LanguageResource
+    public class LanguageResourceModel
     {
         public string LanguageName { get; set; }
         public Dictionary<string, string> Values { get; set; }
-        public LanguageResource()
+        public LanguageResourceModel()
         {
             Values = new Dictionary<string, string>();
         }

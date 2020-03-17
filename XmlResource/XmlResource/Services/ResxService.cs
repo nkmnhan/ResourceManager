@@ -5,6 +5,7 @@ using System.Configuration;
 using System.IO;
 using System.Linq;
 using System.Resources;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Xml;
 using XmlResource.Models;
@@ -13,7 +14,7 @@ namespace XmlResource.Services
 {
     public static class ResxService
     {
-        public static void Generate(string className, string folderPath, List<LanguageResource> languageResources)
+        public static void Generate(string className, string folderPath, List<LanguageResourceModel> languageResources)
         {
             if (!Directory.Exists(folderPath))
             {
@@ -34,7 +35,7 @@ namespace XmlResource.Services
             }
         }
 
-        public static void UpdateResx(string className, string folderPath, List<LanguageResource> languageResources)
+        public static void UpdateResx(string className, string folderPath, List<LanguageResourceModel> languageResources)
         {
             foreach (var langaugeResource in languageResources)
             {
@@ -69,7 +70,7 @@ namespace XmlResource.Services
             return @$"{folderPath}\{className}Resource{subfix}.resx";
         }
 
-        public static async Task DifferentKeysReport(LanguageResource languageResource, string resxFilePath)
+        public static async Task DifferentKeysReport(LanguageResourceModel languageResource, string resxFilePath)
         {
             using (var reader = new ResXResourceReader(resxFilePath))
             {
@@ -84,6 +85,54 @@ namespace XmlResource.Services
                     await outputFile.WriteAsync(report);
                 }
             }
+        }
+
+        public static ExcelDataModel ConvertExcelData(string resxFolder)
+        {
+            var files = Directory.GetFiles(resxFolder).Where(x => x.EndsWith(".resx"));
+
+            var excelData = new ExcelDataModel();
+            var defaultLanguage = ConfigurationManager.AppSettings["DefaultLanguage"];
+
+            foreach (var file in files)
+            {
+                using (var reader = new ResXResourceReader(file))
+                {
+                    var resxItems = reader.Cast<DictionaryEntry>();
+                    var languageName = GetLanguageName(file);
+
+                    if (string.IsNullOrWhiteSpace(languageName) || languageName.Equals(defaultLanguage, StringComparison.InvariantCultureIgnoreCase))
+                    {
+                        excelData.Keys = resxItems.Select(x => x.Key.ToString()).ToList();
+                        excelData.LanguageColumns.Insert(0, new LanguageColumnModel()
+                        {
+                            LanguageName = languageName.Equals(defaultLanguage, StringComparison.InvariantCultureIgnoreCase) ? "default" : defaultLanguage,
+                            Values = resxItems.ToList()
+                        });
+                    }
+                    else
+                    {
+                        excelData.LanguageColumns.Add(new LanguageColumnModel()
+                        {
+                            LanguageName = languageName,
+                            Values = resxItems.ToList()
+                        });
+                    }
+
+                }
+            }
+
+            return excelData;
+        }
+
+        public static string GetLanguageName(string path)
+        {
+
+            var fileNameRegex = new Regex(@"(?<FileName>[\w.]+).resx");
+            var languageRegex = new Regex(@"(?:[\w]*).(?<LanguageName>[\w-]*)");
+
+            var fileName = fileNameRegex.Match(path).Groups["FileName"].Value;
+            return languageRegex.Match(fileName).Groups["LanguageName"].Value;
         }
     }
 }

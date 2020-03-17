@@ -7,9 +7,9 @@ using XmlResource.Models;
 
 namespace XmlResource.Services
 {
-    public static class ExecelService
+    public static class ExcelService
     {
-        public static List<LanguageResource> Read(string path)
+        public static List<LanguageResourceModel> Read(string path)
         {
             // If you are a commercial business and have
             // purchased commercial licenses use the static property
@@ -43,7 +43,7 @@ namespace XmlResource.Services
                     throw new System.Exception("Cannot find any language");
                 }
 
-                var languageModels = new List<LanguageResource>();
+                var languageModels = new List<LanguageResourceModel>();
                 for (int col = keyCol + 1; col <= colCount; col++)
                 {
                     var language = worksheet.Cells[1, col].Value?.ToString().Trim();
@@ -54,7 +54,7 @@ namespace XmlResource.Services
                     }
 
 
-                    var languageResource = new LanguageResource
+                    var languageResource = new LanguageResourceModel
                     {
                         LanguageName = language
                     };
@@ -118,6 +118,45 @@ namespace XmlResource.Services
                 return endIndex - startIndex;
             }
             return 0;
+        }
+
+        public static void ExportXmlResxToExcel(ExcelDataModel excelData, string newFilePath)
+        {
+            ExcelPackage.LicenseContext = LicenseContext.Commercial;
+            ExcelPackage.LicenseContext = LicenseContext.NonCommercial;
+
+            using (ExcelPackage excel = new ExcelPackage())
+            {
+                var workSheet = excel.Workbook.Worksheets.FirstOrDefault();
+                if (workSheet == null)
+                {
+                    workSheet = excel.Workbook.Worksheets.Add("Sheet1");
+                }
+
+                workSheet.Cells[1, 1].Value = "Key";
+                var headerInfo = new Dictionary<int, string>();
+                foreach (var languageCol in excelData.LanguageColumns.Select((resourceInfo, index) => new { resourceInfo, index }))
+                {
+                    workSheet.Cells[1, languageCol.index + 2].Value = languageCol.resourceInfo.LanguageName;
+                    headerInfo.Add(languageCol.index + 2, languageCol.resourceInfo.LanguageName);
+                }
+
+                foreach (var key in excelData.Keys.Select((value, index) => new { value, index }))
+                {
+                    workSheet.Cells[key.index + 2, 1].Value = key.value;
+                    foreach (var header in headerInfo)
+                    {
+                        var valueByHeader = excelData.LanguageColumns
+                            .FirstOrDefault(x => x.LanguageName.Equals(header.Value))
+                            .Values.FirstOrDefault(x => x.Key.Equals(key.value)).Value;
+
+                        workSheet.Cells[key.index + 2, header.Key].Value = valueByHeader;
+                    }
+                }
+
+                FileInfo excelFile = new FileInfo(newFilePath);
+                excel.SaveAs(excelFile);
+            }
         }
     }
 }
