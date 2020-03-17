@@ -1,2 +1,2 @@
 # XmlResource.NetCore
- Manage .resx file by excel
+ Manage xml resource by excel
