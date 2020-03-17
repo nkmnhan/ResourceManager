@@ -1,5 +1,4 @@
 ﻿using System.IO;
-using System.Linq;
 using System.Threading.Tasks;
 using XmlResource.Services;
 
@@ -16,10 +15,22 @@ namespace XmlResource
                 Directory.CreateDirectory(resxFolder);
             }
 
+            // Generate resx file from resource
+            // ClassName is a part of resource file name: MySampleResource.resx => ClassName = MySample
             var languageResourece = ExecelService.Read(@"D:\StudyRepos\SampleData\data.xlsx");
             ResxService.Generate("ClassName", resxFolder, languageResourece);
+
+            /*  // Update resx file base on excel
+             var languageResourece = ExecelService.Read(@"D:\StudyRepos\SampleData\data.xlsx");
+             ResxService.UpdateResx("ClassName", resxFolder, languageResourece);
+             */
+
+            /* // Get different key report
+            var languageResourece = ExecelService.Read(@"D:\StudyRepos\SampleData\data.xlsx");
             await ResxService.DifferentKeysReport(languageResourece.FirstOrDefault(),
                 @"D:\StudyRepos\SampleData\MyClassResource.resx");
+            */
+
         }
     }
 }
