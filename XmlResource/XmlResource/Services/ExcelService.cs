@@ -135,22 +135,28 @@ namespace XmlResource.Services
 
                 workSheet.Cells[1, 1].Value = "Key";
                 var headerInfo = new Dictionary<int, string>();
-                foreach (var languageCol in excelData.LanguageColumns.Select((resourceInfo, index) => new { resourceInfo, index }))
+                foreach (var column in excelData.LanguageColumns.Select((resourceInfo, index) => new { resourceInfo, index }))
                 {
-                    workSheet.Cells[1, languageCol.index + 2].Value = languageCol.resourceInfo.LanguageName;
-                    headerInfo.Add(languageCol.index + 2, languageCol.resourceInfo.LanguageName);
+                    var headerColIndex = column.index + 2;
+                    var languageName = column.resourceInfo.LanguageName;
+
+                    workSheet.Cells[1, headerColIndex].Value = languageName;
+                    headerInfo.Add(headerColIndex, languageName);
                 }
 
-                foreach (var key in excelData.Keys.Select((value, index) => new { value, index }))
+                foreach (var resource in excelData.Keys.Select((value, index) => new { value, index }))
                 {
-                    workSheet.Cells[key.index + 2, 1].Value = key.value;
+                    var rowIndex = resource.index + 2;
+
+                    workSheet.Cells[rowIndex, 1].Value = resource.value;
+
                     foreach (var header in headerInfo)
                     {
                         var valueByHeader = excelData.LanguageColumns
-                            .FirstOrDefault(x => x.LanguageName.Equals(header.Value))
-                            .Values.FirstOrDefault(x => x.Key.Equals(key.value)).Value;
+                                                     .FirstOrDefault(x => x.LanguageName.Equals(header.Value)).Values
+                                                     .FirstOrDefault(x => x.Key.Equals(resource.value)).Value;
 
-                        workSheet.Cells[key.index + 2, header.Key].Value = valueByHeader;
+                        workSheet.Cells[rowIndex, header.Key].Value = valueByHeader;
                     }
                 }
 

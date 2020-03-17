@@ -89,10 +89,8 @@ namespace XmlResource.Services
 
         public static ExcelDataModel ConvertExcelData(string resxFolder)
         {
-            var files = Directory.GetFiles(resxFolder).Where(x => x.EndsWith(".resx"));
-
             var excelData = new ExcelDataModel();
-            var defaultLanguage = ConfigurationManager.AppSettings["DefaultLanguage"];
+            var files = Directory.GetFiles(resxFolder).Where(x => x.EndsWith(".resx"));
 
             foreach (var file in files)
             {
@@ -101,12 +99,12 @@ namespace XmlResource.Services
                     var resxItems = reader.Cast<DictionaryEntry>();
                     var languageName = GetLanguageName(file);
 
-                    if (string.IsNullOrWhiteSpace(languageName) || languageName.Equals(defaultLanguage, StringComparison.InvariantCultureIgnoreCase))
+                    if (string.IsNullOrWhiteSpace(languageName))
                     {
                         excelData.Keys = resxItems.Select(x => x.Key.ToString()).ToList();
                         excelData.LanguageColumns.Insert(0, new LanguageColumnModel()
                         {
-                            LanguageName = languageName.Equals(defaultLanguage, StringComparison.InvariantCultureIgnoreCase) ? "default" : defaultLanguage,
+                            LanguageName = "default",
                             Values = resxItems.ToList()
                         });
                     }
@@ -127,7 +125,6 @@ namespace XmlResource.Services
 
         public static string GetLanguageName(string path)
         {
-
             var fileNameRegex = new Regex(@"(?<FileName>[\w.]+).resx");
             var languageRegex = new Regex(@"(?:[\w]*).(?<LanguageName>[\w-]*)");
 
