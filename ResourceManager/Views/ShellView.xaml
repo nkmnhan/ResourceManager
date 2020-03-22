@@ -1,0 +1,104 @@
+﻿<fw:AcrylicWindow x:Class="ResourceManager.Views.ShellView"
+                  xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                  xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                  xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+                  xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+                  mc:Ignorable="d"
+                  d:DesignHeight="450" d:DesignWidth="800"
+                  xmlns:fw="clr-namespace:SourceChord.FluentWPF;assembly=FluentWPF"
+                  xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+                  Icon="pack://application:,,,/ResourceManager.ico"
+                  Title="Resource Manager">
+
+    <Window.Resources>
+        <Storyboard x:Key="OpenMenu">
+            <DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="(FrameworkElement.Width)" Storyboard.TargetName="GridMenu">
+                <EasingDoubleKeyFrame KeyTime="0" Value="55"/>
+                <EasingDoubleKeyFrame KeyTime="0:0:0.2" Value="300"/>
+            </DoubleAnimationUsingKeyFrames>
+            <ThicknessAnimationUsingKeyFrames Storyboard.TargetProperty="Margin" BeginTime="00:00:00" Storyboard.TargetName="GridMain">
+                <SplineThicknessKeyFrame KeyTime="0" Value="55,0,0,0" />
+                <SplineThicknessKeyFrame KeyTime="0:0:0.2" Value="300,0,0,0" />
+            </ThicknessAnimationUsingKeyFrames>
+        </Storyboard>
+        <Storyboard x:Key="CloseMenu">
+            <DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="(FrameworkElement.Width)" Storyboard.TargetName="GridMenu">
+                <EasingDoubleKeyFrame KeyTime="0" Value="300"/>
+                <EasingDoubleKeyFrame KeyTime="0:0:0.2" Value="55"/>
+            </DoubleAnimationUsingKeyFrames>
+            <ThicknessAnimationUsingKeyFrames Storyboard.TargetProperty="Margin" BeginTime="00:00:00" Storyboard.TargetName="GridMain">
+                <SplineThicknessKeyFrame KeyTime="0" Value="300,0,0,0" />
+                <SplineThicknessKeyFrame KeyTime="0:0:0.2" Value="55,0,0,0" />
+            </ThicknessAnimationUsingKeyFrames>
+        </Storyboard>
+    </Window.Resources>
+    <Window.Triggers>
+        <EventTrigger RoutedEvent="Button.Click" SourceName="ButtonOpenMenu">
+            <BeginStoryboard Storyboard="{StaticResource OpenMenu}"/>
+        </EventTrigger>
+        <EventTrigger RoutedEvent="Button.Click" SourceName="ButtonCloseMenu">
+            <BeginStoryboard Storyboard="{StaticResource CloseMenu}"/>
+        </EventTrigger>
+    </Window.Triggers>
+    <Grid>
+        <Grid x:Name="GridMain" Margin="55,0,0,0" Background="{StaticResource SystemAltMediumLowColorBrush}"/>
+        <Grid x:Name="GridMenu" Width="55" HorizontalAlignment="Left">
+            <StackPanel >
+                <Grid Height="150" RenderTransformOrigin="0.5,0.5">
+                    <Grid.RenderTransform>
+                        <TransformGroup>
+                            <ScaleTransform/>
+                            <SkewTransform/>
+                            <RotateTransform/>
+                            <TranslateTransform/>
+                        </TransformGroup>
+                    </Grid.RenderTransform>
+                    <Button x:Name="ButtonOpenMenu"
+                            Height="50" Width="50"
+                            Margin="0 2 3 0"
+                            HorizontalAlignment="Right"
+                            VerticalAlignment="Top"
+                            Style="{StaticResource MaterialDesignFloatingActionMiniAccentButton}"
+                            Background="{x:Null}"
+                            BorderBrush="{x:Null}"
+                            Foreground="Black"
+                            Click="ButtonOpenMenu_Click">
+                        <materialDesign:PackIcon Kind="Menu" Width="25" Height="25" VerticalAlignment="Center"/>
+                    </Button>
+                    <Button x:Name="ButtonCloseMenu"
+                            Visibility="Collapsed"
+                            Height="50" Width="50"
+                            Margin="0 2 3 0"
+                            HorizontalAlignment="Right"
+                            VerticalAlignment="Top"
+                            Style="{StaticResource MaterialDesignFloatingActionMiniAccentButton}"
+                            Background="{x:Null}" BorderBrush="{x:Null}"
+                            Foreground="Black"
+                            Click="ButtonCloseMenu_Click">
+                        <materialDesign:PackIcon Kind="ArrowLeft" Width="25" Height="25"/>
+                    </Button>
+                    <Label Padding="100 0 0 10" VerticalAlignment="Bottom">
+                        <materialDesign:PackIcon Kind="Battlenet" Width="90" Height="90" Foreground="Black"/>
+                    </Label>
+                </Grid>
+                <ListView x:Name="ListViewMenu"
+                          Foreground="Black"
+                          ScrollViewer.HorizontalScrollBarVisibility="Disabled"
+                          SelectionChanged="ListViewMenu_SelectionChanged">
+                    <ListViewItem x:Name="I18nItem" Height="60" >
+                        <StackPanel Orientation="Horizontal">
+                            <materialDesign:PackIcon Kind="Vuejs" Height="25" Width="25" Margin="6"/>
+                            <TextBlock Text="I18n" VerticalAlignment="Center" Margin="20 10"/>
+                        </StackPanel>
+                    </ListViewItem>
+                    <ListViewItem x:Name="ResxItem" Height="60">
+                        <StackPanel Orientation="Horizontal">
+                            <materialDesign:PackIcon Kind="Language" Height="25" Width="25" Margin="6"/>
+                            <TextBlock Text="Resx" VerticalAlignment="Center" Margin="20 10"/>
+                        </StackPanel>
+                    </ListViewItem>
+                </ListView>
+            </StackPanel>
+        </Grid>
+    </Grid>
+</fw:AcrylicWindow>

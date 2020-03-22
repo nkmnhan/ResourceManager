@@ -1,0 +1,32 @@
+﻿<Project Sdk="Microsoft.NET.Sdk.WindowsDesktop">
+
+    <PropertyGroup>
+        <OutputType>WinExe</OutputType>
+        <TargetFramework>netcoreapp3.1</TargetFramework>
+        <UseWPF>true</UseWPF>
+        <ApplicationIcon>ResourceManager.ico</ApplicationIcon>
+        <StartupObject>ResourceManager.App</StartupObject>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <None Remove="ResourceManager.ico" />
+    </ItemGroup>
+
+    <ItemGroup>
+        <PackageReference Include="Caliburn.Micro" Version="3.2.0" />
+        <PackageReference Include="FluentWPF" Version="0.8.0" />
+        <PackageReference Include="MaterialDesignColors" Version="1.2.2" />
+        <PackageReference Include="MaterialDesignThemes" Version="3.0.1" />
+    </ItemGroup>
+
+    <ItemGroup>
+        <ProjectReference Include="..\ResourceManager.Core\ResourceManager.Core.csproj" />
+    </ItemGroup>
+
+    <ItemGroup>
+        <Resource Include="ResourceManager.ico">
+            <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+        </Resource>
+    </ItemGroup>
+
+</Project>
