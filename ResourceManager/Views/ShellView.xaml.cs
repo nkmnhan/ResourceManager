@@ -1,5 +1,4 @@
 ﻿using System.Windows;
-using System.Windows.Controls;
 
 namespace ResourceManager.Views
 {
@@ -25,24 +24,24 @@ namespace ResourceManager.Views
             this.ButtonOpenMenu.Visibility = Visibility.Visible;
         }
 
-        private void ListViewMenu_SelectionChanged(object sender, SelectionChangedEventArgs e)
-        {
-            this.GridMain.Children.Clear();
+        //private void ListViewMenu_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        //{
+        //    this.GridMain.Children.Clear();
 
-            switch (((ListViewItem)((ListView)sender).SelectedItem).Name)
-            {
-                case "LoginCardItem":
-                    this.GridMain.Children.Add(this.LoginCardControl);
-                    break;
-                case "SftpLoginCardItem":
-                    this.GridMain.Children.Add(this.SftpLoginCardControl);
-                    break;
-                case "ConfigItem":
-                    this.GridMain.Children.Add(this.ConfigControl);
-                    break;
-                default:
-                    break;
-            }
-        }
+        //    switch (((ListViewItem)((ListView)sender).SelectedItem).Name)
+        //    {
+        //        //case "LoginCardItem":
+        //        //    this.GridMain.Children.Add(this.LoginCardControl);
+        //        //    break;
+        //        //case "SftpLoginCardItem":
+        //        //    this.GridMain.Children.Add(this.SftpLoginCardControl);
+        //        //    break;
+        //        //case "ConfigItem":
+        //        //    this.GridMain.Children.Add(this.ConfigControl);
+        //        //    break;
+        //        //default:
+        //        //    break;
+        //    }
+        //}
     }
 }

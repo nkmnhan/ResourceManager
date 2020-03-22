@@ -7,6 +7,7 @@
                   d:DesignHeight="450" d:DesignWidth="800"
                   xmlns:fw="clr-namespace:SourceChord.FluentWPF;assembly=FluentWPF"
                   xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+                  xmlns:cal="clr-namespace:Caliburn.Micro;assembly=Caliburn.Micro.Platform"
                   Icon="pack://application:,,,/ResourceManager.ico"
                   Title="Resource Manager">
 
@@ -41,7 +42,13 @@
         </EventTrigger>
     </Window.Triggers>
     <Grid>
-        <Grid x:Name="GridMain" Margin="55,0,0,0" Background="{StaticResource SystemAltMediumLowColorBrush}"/>
+        <Grid x:Name="GridMain" Margin="55,0,0,0" Background="{StaticResource SystemAltMediumLowColorBrush}">
+            <Frame cal:Message.Attach="RegisterFrame($source)"
+                   Padding="10 10 10 10"
+                   NavigationUIVisibility="Hidden"
+                   Background="{StaticResource SystemAltMediumLowColorBrush}"
+                   DataContext="{x:Null}" />
+        </Grid>
         <Grid x:Name="GridMenu" Width="55" HorizontalAlignment="Left">
             <StackPanel >
                 <Grid Height="150" RenderTransformOrigin="0.5,0.5">
@@ -84,7 +91,7 @@
                 <ListView x:Name="ListViewMenu"
                           Foreground="Black"
                           ScrollViewer.HorizontalScrollBarVisibility="Disabled"
-                          SelectionChanged="ListViewMenu_SelectionChanged">
+                          cal:Message.Attach="[Event SelectionChanged] = [Action SelectionChanged($source, $eventArgs)]">
                     <ListViewItem x:Name="I18nItem" Height="60" >
                         <StackPanel Orientation="Horizontal">
                             <materialDesign:PackIcon Kind="Vuejs" Height="25" Width="25" Margin="6"/>

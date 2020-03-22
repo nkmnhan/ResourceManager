@@ -19,9 +19,16 @@ namespace ResourceManager
         {
             container = new SimpleContainer();
 
-            container.Singleton<IWindowManager, WindowManager>();
+            container.Instance(container);
 
-            container.PerRequest<ShellViewModel>();
+            container
+                .Singleton<IWindowManager, WindowManager>()
+                .Singleton<IEventAggregator, EventAggregator>();
+
+            container
+                .PerRequest<ShellViewModel>()
+                .Singleton<I18nViewModel>()
+                .Singleton<ResxViewModel>();
         }
 
         protected override void OnStartup(object sender, StartupEventArgs e)
