@@ -1,15 +1,15 @@
 ﻿using OfficeOpenXml;
+using ResourceManager.Core.Models;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
-using XmlResource.Models;
 
-namespace XmlResource.Services
+namespace ResourceManager.Core.Services
 {
     public static class ExcelService
     {
-        public static List<LanguageResourceModel> Read(string path)
+        public static List<LanguageModel> Read(string path)
         {
             // If you are a commercial business and have
             // purchased commercial licenses use the static property
@@ -43,7 +43,7 @@ namespace XmlResource.Services
                     throw new System.Exception("Cannot find any language");
                 }
 
-                var languageModels = new List<LanguageResourceModel>();
+                var languageModels = new List<LanguageModel>();
                 for (int col = keyCol + 1; col <= colCount; col++)
                 {
                     var language = worksheet.Cells[1, col].Value?.ToString().Trim();
@@ -54,9 +54,9 @@ namespace XmlResource.Services
                     }
 
 
-                    var languageResource = new LanguageResourceModel
+                    var languageResource = new LanguageModel
                     {
-                        LanguageName = language
+                        Name = language
                     };
 
                     for (int row = 2; row <= rowCount; row++)
@@ -92,35 +92,7 @@ namespace XmlResource.Services
             }
         }
 
-        public static string GetMergedRangeAddress(this ExcelRange @this)
-        {
-            if (@this.Merge)
-            {
-                var idx = @this.Worksheet.GetMergeCellId(@this.Start.Row, @this.Start.Column);
-                return @this.Worksheet.MergedCells[idx - 1]; //the array is 0-indexed but the mergeId is 1-indexed...
-            }
-            else
-            {
-                return @this.Address;
-            }
-        }
-
-        public static int GetMergedRowRange(this ExcelRange @this)
-        {
-            var range = @this.GetMergedRangeAddress();
-            var regex = new Regex(@"([a-zA-Z]+)(?<startIndex>[\d]+):([a-zA-Z]+)(?<endIndex>[\d]+)");
-            var match = regex.Match(range);
-            if (match.Groups.Count > 1)
-            {
-                var startIndex = int.Parse(match.Groups["startIndex"].Value);
-                var endIndex = int.Parse(match.Groups["endIndex"].Value);
-
-                return endIndex - startIndex;
-            }
-            return 0;
-        }
-
-        public static void ExportXmlResxToExcel(ExcelDataModel excelData, string newFilePath)
+        public static void Export(ExcelModel excelData, string newFilePath)
         {
             ExcelPackage.LicenseContext = LicenseContext.Commercial;
             ExcelPackage.LicenseContext = LicenseContext.NonCommercial;
@@ -135,7 +107,7 @@ namespace XmlResource.Services
 
                 workSheet.Cells[1, 1].Value = "Key";
                 var headerInfo = new Dictionary<int, string>();
-                foreach (var column in excelData.LanguageColumns.Select((resourceInfo, index) => new { resourceInfo, index }))
+                foreach (var column in excelData.Columns.Select((resourceInfo, index) => new { resourceInfo, index }))
                 {
                     var headerColIndex = column.index + 2;
                     var languageName = column.resourceInfo.LanguageName;
@@ -152,7 +124,7 @@ namespace XmlResource.Services
 
                     foreach (var header in headerInfo)
                     {
-                        var valueByHeader = excelData.LanguageColumns
+                        var valueByHeader = excelData.Columns
                                                      .FirstOrDefault(x => x.LanguageName.Equals(header.Value)).Values
                                                      .FirstOrDefault(x => x.Key.Equals(resource.value)).Value;
 
@@ -163,6 +135,34 @@ namespace XmlResource.Services
                 FileInfo excelFile = new FileInfo(newFilePath);
                 excel.SaveAs(excelFile);
             }
+        }
+
+        private static string GetMergedRangeAddress(this ExcelRange @this)
+        {
+            if (@this.Merge)
+            {
+                var idx = @this.Worksheet.GetMergeCellId(@this.Start.Row, @this.Start.Column);
+                return @this.Worksheet.MergedCells[idx - 1]; //the array is 0-indexed but the mergeId is 1-indexed...
+            }
+            else
+            {
+                return @this.Address;
+            }
+        }
+
+        private static int GetMergedRowRange(this ExcelRange @this)
+        {
+            var range = @this.GetMergedRangeAddress();
+            var regex = new Regex(@"([a-zA-Z]+)(?<startIndex>[\d]+):([a-zA-Z]+)(?<endIndex>[\d]+)");
+            var match = regex.Match(range);
+            if (match.Groups.Count > 1)
+            {
+                var startIndex = int.Parse(match.Groups["startIndex"].Value);
+                var endIndex = int.Parse(match.Groups["endIndex"].Value);
+
+                return endIndex - startIndex;
+            }
+            return 0;
         }
     }
 }

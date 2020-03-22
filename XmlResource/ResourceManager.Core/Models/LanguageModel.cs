@@ -1,12 +1,12 @@
 ﻿using System.Collections.Generic;
 
-namespace XmlResource.Models
+namespace ResourceManager.Core.Models
 {
-    public class LanguageResourceModel
+    public class LanguageModel
     {
-        public string LanguageName { get; set; }
+        public string Name { get; set; }
         public Dictionary<string, string> Values { get; set; }
-        public LanguageResourceModel()
+        public LanguageModel()
         {
             Values = new Dictionary<string, string>();
         }

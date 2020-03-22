@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.29905.134
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "XmlResource", "XmlResource\XmlResource.csproj", "{EBEF61E8-5AE9-47FC-9415-F48AB14FC164}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ResourceManager.Core", "ResourceManager.Core\ResourceManager.Core.csproj", "{EBEF61E8-5AE9-47FC-9415-F48AB14FC164}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
