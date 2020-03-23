@@ -4,11 +4,210 @@
       xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
       xmlns:local="clr-namespace:ResourceManager.Views"
+      xmlns:fw="clr-namespace:SourceChord.FluentWPF;assembly=FluentWPF"
+      xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+      xmlns:cal="clr-namespace:Caliburn.Micro;assembly=Caliburn.Micro.Platform"
       mc:Ignorable="d" 
       d:DesignHeight="450" d:DesignWidth="800"
       Title="I18nView">
 
-    <Grid>
-        <TextBlock x:Name="Name"/>
-    </Grid>
+    <ScrollViewer HorizontalScrollBarVisibility="Disabled"
+                  Style="{StaticResource MyScrollView}">
+        <StackPanel HorizontalAlignment="Stretch"
+                    VerticalAlignment="Stretch">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="1*"/>
+                    <RowDefinition Height="1*"/>
+                    <RowDefinition Height="1*"/>
+                </Grid.RowDefinitions>
+                <StackPanel Grid.Row="0" Margin="20 0">
+                    <TextBlock Text="Gernerate I18n form excel"
+                               Margin="0 10"
+                               FontSize="16"/>
+                    <TextBlock Text="Excel path"
+                               FontSize="12"/>
+                    <StackPanel Orientation="Horizontal">
+                        <TextBox HorizontalAlignment="Left"
+                                 Margin="0 5"
+                                 Width="400"
+                                 Padding="5 5 25 5"
+                                 Style="{StaticResource TextBoxRevealStyle}"
+                                 fw:Extensions.PlaceholderText="Choose an excel path"/>
+                        <Button Style="{StaticResource MaterialDesignRaisedLightButton}"
+                                Height="16"
+                                Width="32"
+                                Background="{x:Null}"
+                                BorderThickness="0"
+                                Margin="-45 0 0 0"
+                                Padding="0"
+                                HorizontalAlignment="Center"
+                                VerticalAlignment="Center"
+                                materialDesign:ButtonAssist.CornerRadius="5"
+                                ToolTip="MaterialDesignRaisedLightButton with Round Corners"
+                                cal:Message.Attach="[Event Click] = [Action SelectFolder($source, $eventArgs)]"
+                                Tag="GenerateSelectedExcel">
+                            <materialDesign:PackIcon Kind="OpenInBrowser" Width="32" Height="16"/>
+                        </Button>
+                    </StackPanel>
+                    <TextBlock Text="Save path"
+                               FontSize="12"/>
+                    <StackPanel Orientation="Horizontal">
+                        <TextBox HorizontalAlignment="Left"
+                                 Margin="0 5"
+                                 Width="400"
+                                 Padding="5 5 25 5"
+                                 Style="{StaticResource TextBoxRevealStyle}"
+                                 fw:Extensions.PlaceholderText="Choose a destination folder"/>
+                        <Button Style="{StaticResource MaterialDesignRaisedLightButton}"
+                                Height="16"
+                                Width="32"
+                                Background="{x:Null}"
+                                BorderThickness="0"
+                                Margin="-45 0 0 0"
+                                Padding="0"
+                                HorizontalAlignment="Center"
+                                VerticalAlignment="Center"
+                                materialDesign:ButtonAssist.CornerRadius="5"
+                                ToolTip="MaterialDesignRaisedLightButton with Round Corners"
+                               >
+                            <materialDesign:PackIcon Kind="OpenInBrowser" Width="32" Height="16"/>
+                        </Button>
+                    </StackPanel>
+                    <Button Content="Excute"
+                            HorizontalAlignment="Left"
+                            Margin="0 5"
+                            Width="75"
+                            Height="32"
+                            Style="{StaticResource ButtonRevealStyle}"/>
+                </StackPanel>
+            </Grid>
+
+            <Grid Margin="0 20">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="1*"/>
+                    <RowDefinition Height="1*"/>
+                    <RowDefinition Height="1*"/>
+                </Grid.RowDefinitions>
+                <StackPanel Grid.Row="0" Margin="20 0">
+                    <TextBlock Text="Export I18n to excel"
+                               Margin="0 10"
+                               FontSize="16"/>
+                    <TextBlock Text="I18n source path"
+                               FontSize="12"/>
+                    <StackPanel Orientation="Horizontal">
+                        <TextBox HorizontalAlignment="Left"
+                                 Margin="0 5"
+                                 Width="400"
+                                 Padding="5 5 25 5"
+                                 Style="{StaticResource TextBoxRevealStyle}"
+                                 fw:Extensions.PlaceholderText="Choose a source path"/>
+                        <Button Style="{StaticResource MaterialDesignRaisedLightButton}"
+                                Height="16"
+                                Width="32"
+                                Background="{x:Null}"
+                                BorderThickness="0"
+                                Margin="-45 0 0 0"
+                                Padding="0"
+                                HorizontalAlignment="Center"
+                                VerticalAlignment="Center"
+                                materialDesign:ButtonAssist.CornerRadius="5"
+                                ToolTip="MaterialDesignRaisedLightButton with Round Corners"
+                               >
+                            <materialDesign:PackIcon Kind="OpenInBrowser" Width="32" Height="16"/>
+                        </Button>
+                    </StackPanel>
+                    <TextBlock Text="Save path"
+                               FontSize="12"/>
+                    <StackPanel Orientation="Horizontal">
+                        <TextBox HorizontalAlignment="Left"
+                                 Margin="0 5"
+                                 Width="400"
+                                 Padding="5 5 25 5"
+                                 Style="{StaticResource TextBoxRevealStyle}"
+                                 fw:Extensions.PlaceholderText="Choose a destination folder"/>
+                        <Button Style="{StaticResource MaterialDesignRaisedLightButton}"
+                                Height="16"
+                                Width="32"
+                                Background="{x:Null}"
+                                BorderThickness="0"
+                                Margin="-45 0 0 0"
+                                Padding="0"
+                                HorizontalAlignment="Center"
+                                VerticalAlignment="Center"
+                                materialDesign:ButtonAssist.CornerRadius="5"
+                                ToolTip="MaterialDesignRaisedLightButton with Round Corners"
+                               >
+                            <materialDesign:PackIcon Kind="OpenInBrowser" Width="32" Height="16"/>
+                        </Button>
+                    </StackPanel>
+                    <Button Content="Excute" HorizontalAlignment="Left" Margin="0 5" Width="75" Height="32"
+                        Style="{StaticResource ButtonRevealStyle}"/>
+                </StackPanel>
+            </Grid>
+
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="1*"/>
+                    <RowDefinition Height="1*"/>
+                    <RowDefinition Height="1*"/>
+                </Grid.RowDefinitions>
+                <StackPanel Grid.Row="0" Margin="20 0">
+                    <TextBlock Text="Update I18n base on excel"
+                               Margin="0 10"
+                               FontSize="16"/>
+                    <TextBlock Text="Excel path"
+                               FontSize="12"/>
+                    <StackPanel Orientation="Horizontal">
+                        <TextBox HorizontalAlignment="Left"
+                                 Margin="0 5"
+                                 Width="400"
+                                 Padding="5 5 25 5"
+                                 Style="{StaticResource TextBoxRevealStyle}"
+                                 fw:Extensions.PlaceholderText="Choose an excel path"/>
+                        <Button Style="{StaticResource MaterialDesignRaisedLightButton}"
+                                Height="16"
+                                Width="32"
+                                Background="{x:Null}"
+                                BorderThickness="0"
+                                Margin="-45 0 0 0"
+                                Padding="0"
+                                HorizontalAlignment="Center"
+                                VerticalAlignment="Center"
+                                materialDesign:ButtonAssist.CornerRadius="5"
+                                ToolTip="MaterialDesignRaisedLightButton with Round Corners"
+                               >
+                            <materialDesign:PackIcon Kind="OpenInBrowser" Width="32" Height="16"/>
+                        </Button>
+                    </StackPanel>
+                    <TextBlock Text="I18n path"
+                               FontSize="12"/>
+                    <StackPanel Orientation="Horizontal">
+                        <TextBox HorizontalAlignment="Left"
+                                 Margin="0 5"
+                                 Width="400"
+                                 Padding="5 5 25 5"
+                                 Style="{StaticResource TextBoxRevealStyle}"
+                                 fw:Extensions.PlaceholderText="Choose a source folder"/>
+                        <Button Style="{StaticResource MaterialDesignRaisedLightButton}"
+                                Height="16"
+                                Width="32"
+                                Background="{x:Null}"
+                                BorderThickness="0"
+                                Margin="-45 0 0 0"
+                                Padding="0"
+                                HorizontalAlignment="Center"
+                                VerticalAlignment="Center"
+                                materialDesign:ButtonAssist.CornerRadius="5"
+                                ToolTip="MaterialDesignRaisedLightButton with Round Corners"
+                               >
+                            <materialDesign:PackIcon Kind="OpenInBrowser" Width="32" Height="16"/>
+                        </Button>
+                    </StackPanel>
+                    <Button Content="Excute" HorizontalAlignment="Left" Margin="0 5" Width="75" Height="32"
+                        Style="{StaticResource ButtonRevealStyle}"/>
+                </StackPanel>
+            </Grid>
+        </StackPanel>
+    </ScrollViewer>
 </Page>

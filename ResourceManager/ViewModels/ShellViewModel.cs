@@ -7,6 +7,18 @@ namespace ResourceManager.ViewModels
     {
         private readonly SimpleContainer container;
         private INavigationService navigationService;
+        private string header;
+
+        public string Header
+        {
+            get { return header; }
+            set
+            {
+                header = value;
+                NotifyOfPropertyChange(() => header);
+            }
+        }
+
         public ShellViewModel(SimpleContainer container)
         {
             this.container = container;
@@ -17,6 +29,7 @@ namespace ResourceManager.ViewModels
 
             container.Instance(navigationService);
 
+            Header = "I18n";
             navigationService.NavigateToViewModel(typeof(I18nViewModel));
         }
 
@@ -25,12 +38,15 @@ namespace ResourceManager.ViewModels
             switch (((ListViewItem)((ListView)source).SelectedItem).Name)
             {
                 case "I18nItem":
+                    Header = "I18n";
                     navigationService.NavigateToViewModel(typeof(I18nViewModel));
                     break;
                 case "ResxItem":
+                    Header = "Resx";
                     navigationService.NavigateToViewModel(typeof(ResxViewModel));
                     break;
                 default:
+                    Header = "Home";
                     break;
             }
 

@@ -43,11 +43,20 @@
     </Window.Triggers>
     <Grid>
         <Grid x:Name="GridMain" Margin="55,0,0,0" Background="{StaticResource SystemAltMediumLowColorBrush}">
-            <Frame cal:Message.Attach="RegisterFrame($source)"
-                   Padding="10 10 10 10"
+            <Grid.RowDefinitions>
+                <RowDefinition Height="2*"/>
+                <RowDefinition Height="24*"/>
+            </Grid.RowDefinitions>
+            <TextBlock Grid.Row="0"
+                       Text="{Binding Path=Header, Mode=TwoWay}"
+                       Margin="18 18 5 5"
+                       FontSize="24"/>
+
+            <Frame Grid.Row="1"
+                   cal:Message.Attach="RegisterFrame($source)"
                    NavigationUIVisibility="Hidden"
                    Background="{StaticResource SystemAltMediumLowColorBrush}"
-                   DataContext="{x:Null}" />
+                   DataContext="{x:Null}" Margin="0 0 0 0" />
         </Grid>
         <Grid x:Name="GridMenu" Width="55" HorizontalAlignment="Left">
             <StackPanel >
@@ -62,8 +71,8 @@
                     </Grid.RenderTransform>
                     <Button x:Name="ButtonOpenMenu"
                             Height="50" Width="50"
-                            Margin="0 2 3 0"
-                            HorizontalAlignment="Right"
+                            Margin="1 2 3 0"
+                            HorizontalAlignment="Left"
                             VerticalAlignment="Top"
                             Style="{StaticResource MaterialDesignFloatingActionMiniAccentButton}"
                             Background="{x:Null}"
@@ -75,8 +84,8 @@
                     <Button x:Name="ButtonCloseMenu"
                             Visibility="Collapsed"
                             Height="50" Width="50"
-                            Margin="0 2 3 0"
-                            HorizontalAlignment="Right"
+                            Margin="1 2 3 0"
+                            HorizontalAlignment="Left"
                             VerticalAlignment="Top"
                             Style="{StaticResource MaterialDesignFloatingActionMiniAccentButton}"
                             Background="{x:Null}" BorderBrush="{x:Null}"

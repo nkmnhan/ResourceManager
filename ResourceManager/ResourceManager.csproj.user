@@ -18,6 +18,12 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
+    <Page Update="Styles\MyScrollBar.xaml">
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="Styles\MyScrollView.xaml">
+      <SubType>Designer</SubType>
+    </Page>
     <Page Update="Views\I18nView.xaml">
       <SubType>Designer</SubType>
     </Page>

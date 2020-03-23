@@ -16,6 +16,10 @@
 
                 <!--  FluentWPF Controls  -->
                 <ResourceDictionary Source="pack://application:,,,/FluentWPF;component/Styles/Controls.xaml" />
+
+                <!-- Self design style-->
+                <ResourceDictionary Source="Styles\MyScrollBar.xaml"/>
+                <ResourceDictionary Source="Styles\MyScrollView.xaml"/>
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
     </Application.Resources>
