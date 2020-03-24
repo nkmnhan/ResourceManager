@@ -9,6 +9,8 @@
                   xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
                   xmlns:cal="clr-namespace:Caliburn.Micro;assembly=Caliburn.Micro.Platform"
                   Icon="pack://application:,,,/ResourceManager.ico"
+                  MinHeight="800"
+                  MinWidth="800"
                   Title="Resource Manager">
 
     <Window.Resources>
@@ -44,12 +46,12 @@
     <Grid>
         <Grid x:Name="GridMain" Margin="55,0,0,0" Background="{StaticResource SystemAltMediumLowColorBrush}">
             <Grid.RowDefinitions>
-                <RowDefinition Height="2*"/>
+                <RowDefinition Height="60"/>
                 <RowDefinition Height="24*"/>
             </Grid.RowDefinitions>
             <TextBlock Grid.Row="0"
                        Text="{Binding Path=Header, Mode=TwoWay}"
-                       Margin="18 18 5 5"
+                       Margin="24 18 5 5"
                        FontSize="24"/>
 
             <Frame Grid.Row="1"
@@ -57,6 +59,23 @@
                    NavigationUIVisibility="Hidden"
                    Background="{StaticResource SystemAltMediumLowColorBrush}"
                    DataContext="{x:Null}" Margin="0 0 0 0" />
+            <fw:AcrylicPanel Grid.Row="1"
+                             Visibility="Visible"
+                             HorizontalAlignment="Stretch"
+                             VerticalAlignment="Stretch"
+                             TintOpacity="0.4"
+                             NoiseOpacity="0.04">
+                <!--<ProgressBar
+                    Width="120"
+                    Height="120"
+                    VerticalAlignment="Center"
+                    HorizontalAlignment="Center"
+                    Style="{StaticResource MaterialDesignCircularProgressBar}"
+                    Value="0"
+                    IsIndeterminate="True" />-->
+                <ProgressBar VerticalAlignment="Bottom"
+                             IsIndeterminate="True" />
+            </fw:AcrylicPanel>
         </Grid>
         <Grid x:Name="GridMenu" Width="55" HorizontalAlignment="Left">
             <StackPanel >
