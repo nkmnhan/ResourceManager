@@ -18,6 +18,15 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
+    <Page Update="Styles\MyDgvCell.xaml">
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="Styles\MyDgvHeader.xaml">
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="Styles\MyDgvPrimaryCell.xaml">
+      <SubType>Designer</SubType>
+    </Page>
     <Page Update="Styles\MyScrollBar.xaml">
       <SubType>Designer</SubType>
     </Page>

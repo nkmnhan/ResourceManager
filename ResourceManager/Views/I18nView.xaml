@@ -228,6 +228,43 @@
                         Height="32"
                         cal:Message.Attach="[Event Click] = [Action Update($source, $eventArgs)]"
                         Style="{StaticResource ButtonRevealStyle}"/>
+
+                <TextBlock Text="I18n report after update"
+                           Margin="5"
+                           FontSize="12"/>
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="1*"/>
+                        <ColumnDefinition Width="1*"/>
+                        <ColumnDefinition Width="1*"/>
+                    </Grid.ColumnDefinitions>
+                    <DataGrid x:Name="KeysNotInExcel"
+                              Grid.Column="0"
+                              AutoGenerateColumns="False"
+                              IsReadOnly="True"
+                              CellStyle="{StaticResource MyDgvCell}"
+                              Background="AliceBlue"
+                              Margin="0 5 5 5">
+                        <DataGrid.Columns>
+                            <DataGridTextColumn Header="Keys 'Not' in Excel file"
+                                                Width="*"
+                                                Binding="{Binding}"/>
+                        </DataGrid.Columns>
+                    </DataGrid>
+                    <DataGrid x:Name="KeysNotInI18n"
+                              Grid.Column="1"
+                              AutoGenerateColumns="False"
+                              IsReadOnly="True"
+                              CellStyle="{StaticResource MyDgvCell}"
+                              Background="AliceBlue"
+                              Margin="5">
+                        <DataGrid.Columns>
+                            <DataGridTextColumn Header="Keys 'Not' in I18n source"
+                                                Width="*"
+                                                Binding="{Binding}"/>
+                        </DataGrid.Columns>
+                    </DataGrid>
+                </Grid>
             </StackPanel>
         </StackPanel>
     </ScrollViewer>

@@ -20,6 +20,9 @@
                 <!-- Self design style-->
                 <ResourceDictionary Source="Styles\MyScrollBar.xaml"/>
                 <ResourceDictionary Source="Styles\MyScrollView.xaml"/>
+                <ResourceDictionary Source="Styles\MyDgvCell.xaml"/>
+                <ResourceDictionary Source="Styles\MyDgvHeader.xaml"/>
+                <ResourceDictionary Source="Styles\MyDgvPrimaryCell.xaml"/>
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
     </Application.Resources>

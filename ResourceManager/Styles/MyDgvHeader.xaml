@@ -1,0 +1,14 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+    <Style
+        x:Key="MyDgvHeader"
+        TargetType="DataGridColumnHeader">
+        <Setter Property="HorizontalContentAlignment" Value="Center"/>
+        <!--<Setter Property="Background" Value="#2ecc71"/>-->
+        <Setter Property="Background" Value="#FF268F1D"/>
+        <Setter Property="Foreground" Value="White"/>
+        <Setter Property="BorderThickness" Value="0,0,1,0"/>
+        <Setter Property="FontWeight" Value="Bold"/>
+        <Setter Property="Height" Value="32"/>
+    </Style>
+</ResourceDictionary>

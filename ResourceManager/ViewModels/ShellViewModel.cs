@@ -20,7 +20,7 @@ namespace ResourceManager.ViewModels
             set
             {
                 header = value;
-                NotifyOfPropertyChange(() => header);
+                NotifyOfPropertyChange(() => Header);
             }
         }
 
@@ -30,7 +30,7 @@ namespace ResourceManager.ViewModels
             set
             {
                 loading = value;
-                NotifyOfPropertyChange(() => loading);
+                NotifyOfPropertyChange(() => Loading);
             }
         }
 

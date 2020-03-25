@@ -13,7 +13,13 @@ namespace ResourceManager.Core.Services
 {
     public static class I18nService
     {
-        public static async Task Create(List<LanguageModel> languages, string path)
+        /// <summary>
+        /// Create i18n json files base on excel
+        /// </summary>
+        /// <param name="languages">Language model from excel</param>
+        /// <param name="savePath">I18n save folder</param>
+        /// <returns></returns>
+        public static async Task Create(List<LanguageModel> languages, string savePath)
         {
             foreach (var item in languages)
             {
@@ -28,19 +34,25 @@ namespace ResourceManager.Core.Services
                     });
                 }
 
-                using (StreamWriter outputFile = new StreamWriter(Path.Combine(path, $"{item.Name}.json")))
+                using (StreamWriter outputFile = new StreamWriter(Path.Combine(savePath, $"{item.Name}.json")))
                 {
                     await outputFile.WriteAsync(i18n.ToString());
                 }
             }
         }
 
-        public static async Task Update(string folderPath, List<LanguageModel> languageResources)
+        /// <summary>
+        /// Update i18n json files base on excel
+        /// </summary>
+        /// <param name="i18nFolder">I18n source folder</param>
+        /// <param name="languageResources">language model from execel</param>
+        /// <returns></returns>
+        public static async Task Update(string i18nFolder, List<LanguageModel> languageResources)
         {
             foreach (var languageResource in languageResources)
             {
 
-                var jsonPath = Path.Combine(folderPath, $"{languageResource.Name.ToLower()}.json");
+                var jsonPath = Path.Combine(i18nFolder, $"{languageResource.Name.ToLower()}.json");
 
                 if (!File.Exists(jsonPath))
                 {
@@ -63,9 +75,14 @@ namespace ResourceManager.Core.Services
             }
         }
 
-        public static async Task<ExcelModel> ConvertToExcelData(string path)
+        /// <summary>
+        /// Convert i18n json file to excel model
+        /// </summary>
+        /// <param name="i18nFolder">I18n source folder</param>
+        /// <returns></returns>
+        public static async Task<ExcelModel> ConvertToExcelData(string i18nFolder)
         {
-            var files = Directory.GetFiles(path, "*.*", SearchOption.TopDirectoryOnly)
+            var files = Directory.GetFiles(i18nFolder, "*.*", SearchOption.TopDirectoryOnly)
             .Where(s => s.EndsWith(".json"));
 
             var columns = new List<ColumnModel>();
@@ -102,6 +119,44 @@ namespace ResourceManager.Core.Services
 
         }
 
+        /// <summary>
+        /// Get all keys from i18n json files
+        /// </summary>
+        /// <param name="i18nFolder">I18n source folder</param>
+        /// <returns></returns>
+        public static async Task<List<string>> GetAllKeys(string i18nFolder)
+        {
+            var files = Directory.GetFiles(i18nFolder, "*.*", SearchOption.TopDirectoryOnly)
+            .Where(s => s.EndsWith(".json"));
+
+            var keys = new List<string>();
+
+            foreach (var file in files)
+            {
+                using (StreamReader reader = File.OpenText(file))
+                {
+                    var result = await reader.ReadToEndAsync();
+
+                    var regex = new Regex(@"(?<fileName>[\w]*)\.json$");
+                    var match = regex.Match(file);
+
+                    var languageValues = GetLanguageValues(JToken.Parse(result));
+                    var languageKeys = languageValues.Select(x => x.Key.ToString());
+
+                    keys.AddRange(languageKeys);
+                    keys = keys.Distinct().ToList();
+                }
+            }
+
+            return keys;
+        }
+
+        /// <summary>
+        /// Create json object from query path
+        /// </summary>
+        /// <param name="queryPath">Query path</param>
+        /// <param name="value">Value</param>
+        /// <returns>JObject</returns>
         private static JObject CreateJObj(string queryPath, string value)
         {
             if (queryPath.Contains("."))
@@ -117,6 +172,11 @@ namespace ResourceManager.Core.Services
             return new JObject(new JProperty(queryPath, value));
         }
 
+        /// <summary>
+        /// Get all keys and values of tokens
+        /// </summary>
+        /// <param name="tokens">Json tokens</param>
+        /// <returns>Keys and Values</returns>
         private static List<DictionaryEntry> GetLanguageValues(IEnumerable<JToken> tokens)
         {
             var result = new List<DictionaryEntry>();

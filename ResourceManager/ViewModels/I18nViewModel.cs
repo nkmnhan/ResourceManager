@@ -1,10 +1,14 @@
 ﻿
 using Caliburn.Micro;
+using ResourceManager.Core.Helpers;
 using ResourceManager.Core.Services;
 using ResourceManager.Helpers;
 using ResourceManager.Models;
 using System;
+using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.IO;
+using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
 
@@ -14,6 +18,8 @@ namespace ResourceManager.ViewModels
     {
         private string errorMsg;
         private IEventAggregator events;
+        private ObservableCollection<string> keysNotInExcel;
+        private ObservableCollection<string> keysNotInI18n;
 
         // Generate
         private string generateSelectedExcel;
@@ -32,6 +38,8 @@ namespace ResourceManager.ViewModels
         {
             this.events = events;
             this.events.Subscribe(this);
+            this.KeysNotInExcel = new ObservableCollection<string>();
+            this.KeysNotInI18n = new ObservableCollection<string>();
         }
 
         public string ErrorMsg
@@ -40,17 +48,18 @@ namespace ResourceManager.ViewModels
             set
             {
                 errorMsg = value;
-                NotifyOfPropertyChange(() => errorMsg);
+                NotifyOfPropertyChange(() => ErrorMsg);
                 ShowErrorMessage();
             }
         }
+
         public string GenerateSelectedExcel
         {
             get { return generateSelectedExcel; }
             set
             {
                 generateSelectedExcel = value;
-                NotifyOfPropertyChange(() => generateSelectedExcel);
+                NotifyOfPropertyChange(() => GenerateSelectedExcel);
             }
         }
         public string GenerateSaveFolder
@@ -59,7 +68,7 @@ namespace ResourceManager.ViewModels
             set
             {
                 generateSaveFolder = value;
-                NotifyOfPropertyChange(() => generateSaveFolder);
+                NotifyOfPropertyChange(() => GenerateSaveFolder);
             }
         }
 
@@ -69,7 +78,7 @@ namespace ResourceManager.ViewModels
             set
             {
                 exportSourceFolder = value;
-                NotifyOfPropertyChange(() => exportSourceFolder);
+                NotifyOfPropertyChange(() => ExportSourceFolder);
             }
         }
         public string ExportSaveFolder
@@ -78,7 +87,7 @@ namespace ResourceManager.ViewModels
             set
             {
                 exportSaveFolder = value;
-                NotifyOfPropertyChange(() => exportSaveFolder);
+                NotifyOfPropertyChange(() => ExportSaveFolder);
             }
         }
         public string ExportExcelName
@@ -87,7 +96,7 @@ namespace ResourceManager.ViewModels
             set
             {
                 exportExcelName = value;
-                NotifyOfPropertyChange(() => exportExcelName);
+                NotifyOfPropertyChange(() => ExportExcelName);
             }
         }
 
@@ -97,7 +106,7 @@ namespace ResourceManager.ViewModels
             set
             {
                 updateSelectedExcel = value;
-                NotifyOfPropertyChange(() => updateSelectedExcel);
+                NotifyOfPropertyChange(() => UpdateSelectedExcel);
             }
         }
         public string UpdateI18nFolder
@@ -106,7 +115,26 @@ namespace ResourceManager.ViewModels
             set
             {
                 updateI18nFolder = value;
-                NotifyOfPropertyChange(() => updateI18nFolder);
+                NotifyOfPropertyChange(() => UpdateI18nFolder);
+            }
+        }
+        public ObservableCollection<string> KeysNotInExcel
+        {
+            get { return keysNotInExcel; }
+            set
+            {
+                keysNotInExcel = value;
+                NotifyOfPropertyChange(() => KeysNotInExcel);
+            }
+        }
+
+        public ObservableCollection<string> KeysNotInI18n
+        {
+            get { return keysNotInI18n; }
+            set
+            {
+                keysNotInI18n = value;
+                NotifyOfPropertyChange(() => KeysNotInI18n);
             }
         }
 
@@ -144,8 +172,8 @@ namespace ResourceManager.ViewModels
             try
             {
                 SetLoading(Visibility.Visible);
-                var languageResourece = ExcelService.Read(GenerateSelectedExcel);
-                await I18nService.Create(languageResourece, GenerateSaveFolder);
+                var languageResources = ExcelService.Read(GenerateSelectedExcel);
+                await I18nService.Create(languageResources, GenerateSaveFolder);
                 SetLoading(Visibility.Hidden);
             }
             catch (Exception ex)
@@ -187,8 +215,22 @@ namespace ResourceManager.ViewModels
             try
             {
                 SetLoading(Visibility.Visible);
-                var languageResourece = ExcelService.Read(UpdateSelectedExcel);
-                await I18nService.Update(UpdateI18nFolder, languageResourece);
+                var languageResources = ExcelService.Read(UpdateSelectedExcel);
+                await I18nService.Update(UpdateI18nFolder, languageResources);
+
+                var i18nKeys = await I18nService.GetAllKeys(UpdateI18nFolder);
+                var excelKeys = new List<string>();
+                foreach (var item in languageResources)
+                {
+                    excelKeys.AddRange(item.Values.Keys);
+                    excelKeys = excelKeys.Distinct().ToList();
+                }
+
+                var compareResult = CompareHelper.GetDifference<string>(excelKeys, i18nKeys);
+
+                KeysNotInExcel = new ObservableCollection<string>(compareResult.NotInA);
+                KeysNotInI18n = new ObservableCollection<string>(compareResult.NotInB);
+
                 SetLoading(Visibility.Hidden);
             }
             catch (Exception ex)
