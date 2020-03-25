@@ -1,4 +1,5 @@
 ﻿using Caliburn.Micro;
+using ResourceManager.Models;
 using ResourceManager.ViewModels;
 using System;
 using System.Collections.Generic;
@@ -20,6 +21,7 @@ namespace ResourceManager
             container = new SimpleContainer();
 
             container.Instance(container);
+            container.Singleton<StateMessage>();
 
             container
                 .Singleton<IWindowManager, WindowManager>()

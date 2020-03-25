@@ -60,19 +60,11 @@
                    Background="{StaticResource SystemAltMediumLowColorBrush}"
                    DataContext="{x:Null}" Margin="0 0 0 0" />
             <fw:AcrylicPanel Grid.Row="1"
-                             Visibility="Visible"
+                             Visibility="{Binding Path=Loading, Mode=TwoWay}"
                              HorizontalAlignment="Stretch"
                              VerticalAlignment="Stretch"
                              TintOpacity="0.4"
                              NoiseOpacity="0.04">
-                <!--<ProgressBar
-                    Width="120"
-                    Height="120"
-                    VerticalAlignment="Center"
-                    HorizontalAlignment="Center"
-                    Style="{StaticResource MaterialDesignCircularProgressBar}"
-                    Value="0"
-                    IsIndeterminate="True" />-->
                 <ProgressBar VerticalAlignment="Bottom"
                              IsIndeterminate="True" />
             </fw:AcrylicPanel>

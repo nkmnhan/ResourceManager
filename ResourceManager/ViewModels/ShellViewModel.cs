@@ -1,13 +1,18 @@
 ﻿using Caliburn.Micro;
+using ResourceManager.Models;
+using System.Windows;
 using System.Windows.Controls;
 
 namespace ResourceManager.ViewModels
 {
-    public class ShellViewModel : Screen
+    public class ShellViewModel : Screen, IHandle<StateMessage>
     {
+        private IEventAggregator events;
         private readonly SimpleContainer container;
         private INavigationService navigationService;
+
         private string header;
+        private Visibility loading;
 
         public string Header
         {
@@ -19,9 +24,22 @@ namespace ResourceManager.ViewModels
             }
         }
 
-        public ShellViewModel(SimpleContainer container)
+        public Visibility Loading
         {
+            get { return loading; }
+            set
+            {
+                loading = value;
+                NotifyOfPropertyChange(() => loading);
+            }
+        }
+
+        public ShellViewModel(SimpleContainer container, IEventAggregator events)
+        {
+            Loading = Visibility.Hidden;
             this.container = container;
+            this.events = events;
+            this.events.Subscribe(this);
         }
         public void RegisterFrame(Frame frame)
         {
@@ -50,6 +68,11 @@ namespace ResourceManager.ViewModels
                     break;
             }
 
+        }
+
+        public void Handle(StateMessage message)
+        {
+            Loading = message.Loading;
         }
     }
 }

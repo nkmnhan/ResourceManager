@@ -2,15 +2,18 @@
 using Caliburn.Micro;
 using ResourceManager.Core.Services;
 using ResourceManager.Helpers;
+using ResourceManager.Models;
+using System;
 using System.IO;
 using System.Windows;
 using System.Windows.Controls;
 
 namespace ResourceManager.ViewModels
 {
-    public class I18nViewModel : Screen
+    public class I18nViewModel : Screen, IHandle<StateMessage>
     {
         private string errorMsg;
+        private IEventAggregator events;
 
         // Generate
         private string generateSelectedExcel;
@@ -24,6 +27,12 @@ namespace ResourceManager.ViewModels
         // Update
         private string updateSelectedExcel;
         private string updateI18nFolder;
+
+        public I18nViewModel(IEventAggregator events)
+        {
+            this.events = events;
+            this.events.Subscribe(this);
+        }
 
         public string ErrorMsg
         {
@@ -132,8 +141,17 @@ namespace ResourceManager.ViewModels
                 return;
             }
 
-            var languageResourece = ExcelService.Read(GenerateSelectedExcel);
-            await I18nService.Create(languageResourece, GenerateSaveFolder);
+            try
+            {
+                SetLoading(Visibility.Visible);
+                var languageResourece = ExcelService.Read(GenerateSelectedExcel);
+                await I18nService.Create(languageResourece, GenerateSaveFolder);
+                SetLoading(Visibility.Hidden);
+            }
+            catch (Exception ex)
+            {
+                ExceptionHandler(ex);
+            }
         }
 
         public async void Export(object source, RoutedEventArgs eventArgs)
@@ -143,9 +161,20 @@ namespace ResourceManager.ViewModels
                 return;
             }
 
-            var excelData = await I18nService.ConvertToExcelData(exportSourceFolder);
-            var excelPath = Path.Combine(ExportSaveFolder, $"{ExportExcelName}.xlsx");
-            ExcelService.Export(excelData, excelPath);
+
+            try
+            {
+                SetLoading(Visibility.Visible);
+                var excelData = await I18nService.ConvertToExcelData(exportSourceFolder);
+                var excelPath = Path.Combine(ExportSaveFolder, $"{ExportExcelName}.xlsx");
+                ExcelService.Export(excelData, excelPath);
+                SetLoading(Visibility.Hidden);
+            }
+            catch (Exception ex)
+            {
+                ExceptionHandler(ex);
+            }
+
         }
 
         public async void Update(object source, RoutedEventArgs eventArgs)
@@ -155,8 +184,17 @@ namespace ResourceManager.ViewModels
                 return;
             }
 
-            var languageResourece = ExcelService.Read(UpdateSelectedExcel);
-            await I18nService.Update(UpdateI18nFolder, languageResourece);
+            try
+            {
+                SetLoading(Visibility.Visible);
+                var languageResourece = ExcelService.Read(UpdateSelectedExcel);
+                await I18nService.Update(UpdateI18nFolder, languageResourece);
+                SetLoading(Visibility.Hidden);
+            }
+            catch (Exception ex)
+            {
+                ExceptionHandler(ex);
+            }
         }
 
         private bool ValidateGenerate()
@@ -212,6 +250,21 @@ namespace ResourceManager.ViewModels
         private void ShowErrorMessage()
         {
             MessageBox.Show($"{errorMsg}", "Error", MessageBoxButton.OK);
+        }
+
+        private void ExceptionHandler(Exception exception)
+        {
+            ErrorMsg = string.IsNullOrWhiteSpace(exception?.InnerException?.Message) ? exception?.Message : exception?.InnerException?.Message;
+            SetLoading(Visibility.Hidden);
+        }
+
+        public void Handle(StateMessage message)
+        {
+        }
+
+        private void SetLoading(Visibility visibility)
+        {
+            events.PublishOnUIThread(new StateMessage { Loading = visibility });
         }
     }
 }
