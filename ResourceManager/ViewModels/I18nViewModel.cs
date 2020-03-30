@@ -173,7 +173,7 @@ namespace ResourceManager.ViewModels
             {
                 SetLoading(Visibility.Visible);
                 var languageResources = ExcelService.Read(GenerateSelectedExcel);
-                await I18nService.Create(languageResources, GenerateSaveFolder);
+                await I18nService.Create(GenerateSaveFolder, languageResources);
                 SetLoading(Visibility.Hidden);
             }
             catch (Exception ex)
@@ -226,10 +226,10 @@ namespace ResourceManager.ViewModels
                     excelKeys = excelKeys.Distinct().ToList();
                 }
 
-                var compareResult = CompareHelper.GetDifference<string>(excelKeys, i18nKeys);
+                var (NotInA, NotInB) = CompareHelper.GetDifference(excelKeys, i18nKeys);
 
-                KeysNotInExcel = new ObservableCollection<string>(compareResult.NotInA);
-                KeysNotInI18n = new ObservableCollection<string>(compareResult.NotInB);
+                KeysNotInExcel = new ObservableCollection<string>(NotInA);
+                KeysNotInI18n = new ObservableCollection<string>(NotInB);
 
                 SetLoading(Visibility.Hidden);
             }

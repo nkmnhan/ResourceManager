@@ -1,5 +1,8 @@
 ﻿using Caliburn.Micro;
 using ResourceManager.Models;
+using System;
+using System.Threading;
+using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 
@@ -7,6 +10,7 @@ namespace ResourceManager.ViewModels
 {
     public class ShellViewModel : Screen, IHandle<StateMessage>
     {
+        private DateTime startLoadingTime;
         private IEventAggregator events;
         private readonly SimpleContainer container;
         private INavigationService navigationService;
@@ -72,7 +76,20 @@ namespace ResourceManager.ViewModels
 
         public void Handle(StateMessage message)
         {
-            Loading = message.Loading;
+            var period = DateTime.Now.Subtract(startLoadingTime).Milliseconds;
+            if (message.Loading == Visibility.Hidden && period < 3000)
+            {
+                Task.Run(() =>
+                {
+                    Thread.Sleep(3000 - int.Parse(period.ToString()));
+                    Loading = message.Loading;
+                });
+            }
+            else
+            {
+                startLoadingTime = DateTime.Now;
+                Loading = message.Loading;
+            }
         }
     }
 }

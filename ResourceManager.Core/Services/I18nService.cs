@@ -13,13 +13,7 @@ namespace ResourceManager.Core.Services
 {
     public static class I18nService
     {
-        /// <summary>
-        /// Create i18n json files base on excel
-        /// </summary>
-        /// <param name="languages">Language model from excel</param>
-        /// <param name="savePath">I18n save folder</param>
-        /// <returns></returns>
-        public static async Task Create(List<LanguageModel> languages, string savePath)
+        public static async Task Create(string savePath, List<LanguageModel> languages)
         {
             foreach (var item in languages)
             {
@@ -41,12 +35,6 @@ namespace ResourceManager.Core.Services
             }
         }
 
-        /// <summary>
-        /// Update i18n json files base on excel
-        /// </summary>
-        /// <param name="i18nFolder">I18n source folder</param>
-        /// <param name="languageResources">language model from execel</param>
-        /// <returns></returns>
         public static async Task Update(string i18nFolder, List<LanguageModel> languageResources)
         {
             foreach (var languageResource in languageResources)
@@ -75,11 +63,6 @@ namespace ResourceManager.Core.Services
             }
         }
 
-        /// <summary>
-        /// Convert i18n json file to excel model
-        /// </summary>
-        /// <param name="i18nFolder">I18n source folder</param>
-        /// <returns></returns>
         public static async Task<ExcelModel> ConvertToExcelData(string i18nFolder)
         {
             var files = Directory.GetFiles(i18nFolder, "*.*", SearchOption.TopDirectoryOnly)
@@ -119,11 +102,6 @@ namespace ResourceManager.Core.Services
 
         }
 
-        /// <summary>
-        /// Get all keys from i18n json files
-        /// </summary>
-        /// <param name="i18nFolder">I18n source folder</param>
-        /// <returns></returns>
         public static async Task<List<string>> GetAllKeys(string i18nFolder)
         {
             var files = Directory.GetFiles(i18nFolder, "*.*", SearchOption.TopDirectoryOnly)
@@ -151,12 +129,6 @@ namespace ResourceManager.Core.Services
             return keys;
         }
 
-        /// <summary>
-        /// Create json object from query path
-        /// </summary>
-        /// <param name="queryPath">Query path</param>
-        /// <param name="value">Value</param>
-        /// <returns>JObject</returns>
         private static JObject CreateJObj(string queryPath, string value)
         {
             if (queryPath.Contains("."))
@@ -172,11 +144,6 @@ namespace ResourceManager.Core.Services
             return new JObject(new JProperty(queryPath, value));
         }
 
-        /// <summary>
-        /// Get all keys and values of tokens
-        /// </summary>
-        /// <param name="tokens">Json tokens</param>
-        /// <returns>Keys and Values</returns>
         private static List<DictionaryEntry> GetLanguageValues(IEnumerable<JToken> tokens)
         {
             var result = new List<DictionaryEntry>();

@@ -47,17 +47,25 @@ namespace ResourceManager.Core.Services
                     throw new Exception("Cannot find 'Resouce' file");
                 }
 
-                document.Load(xmlPath);
-
-                foreach (var item in languageResource.Values)
+                var resxItems = new List<DictionaryEntry>();
+                using (var reader = new ResXResourceReader(xmlPath))
                 {
-                    var node = document.SelectSingleNode($"/root/data[@name='{item.Key}']/value");
-                    if (node != null)
-                    {
-                        node.InnerText = item.Value;
-                    }
+                    resxItems = reader.Cast<DictionaryEntry>().ToList();
                 }
-                document.Save(xmlPath);
+
+                using (var writer = new ResXResourceWriter(xmlPath))
+                {
+                    foreach (var item in resxItems)
+                    {
+                        var value = item.Value;
+                        if (languageResource.Values.Any(x => x.Key.Equals(item.Key.ToString())))
+                        {
+                            value = languageResource.Values.FirstOrDefault(x => x.Key.Equals(item.Key.ToString())).Value;
+                        }
+                        writer.AddResource(item.Key.ToString(), item.Value);
+                    }
+                    writer.Generate();
+                }
             }
         }
 
@@ -65,7 +73,7 @@ namespace ResourceManager.Core.Services
         {
             var keys = new List<string>();
             var columns = new List<ColumnModel>();
-            var files = Directory.GetFiles(resxFolder).Where(x => x.EndsWith(".resx"));
+            var files = Directory.GetFiles(resxFolder, "*.resx");
 
             foreach (var file in files)
             {
@@ -96,6 +104,28 @@ namespace ResourceManager.Core.Services
                 Keys = keys,
                 Columns = columns
             };
+        }
+
+        public static List<string> GetAllKeys(string updateResxFolder)
+        {
+            var rexsFiles = Directory.GetFiles(updateResxFolder, "*.resx");
+
+            if (!rexsFiles.Any())
+            {
+                throw new Exception("Cannot not find any .resx file");
+            }
+
+            var keys = new List<string>();
+            foreach (var file in rexsFiles)
+            {
+                using (var reader = new ResXResourceReader(file))
+                {
+                    var resxItems = reader.Cast<DictionaryEntry>().ToList();
+                    keys.AddRange(resxItems.Select(x => x.Key.ToString()));
+                    keys = keys.Distinct().ToList();
+                }
+            }
+            return keys;
         }
 
         private static string GetResxPath(string className, string folderPath, string languageName)
